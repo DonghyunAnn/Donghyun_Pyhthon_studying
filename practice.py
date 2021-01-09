@@ -473,7 +473,7 @@ class FlyableAttackunit(AttackUnit,Flyable):
 '''
 
 #연산자 오버로딩: 부모클래스에서 정의한 method말고 자식클래스에서 정의한 method를 사용하고자 할때
-
+'''
 #일반유닛
 class Unit:
     def __init__(self,name,hp,speed):
@@ -483,7 +483,6 @@ class Unit:
         print("{}유닛이 생성되었습니다.".format(name))
 
     def move(self, location):
-        print("[지상 유닛 이동]")
         print("{0}:{1} 방향으로 이동합니다. [속도 {2}]".format(self.name,location,self.speed))
 
     def damaged(self,damage):
@@ -509,6 +508,7 @@ class AttackUnit(Unit):
         if self.hp<=0:
             print("{0}이 파괴되었습니다".format(self.name))
 #연산자 오버로딩으로 하위 class에 move를 추가
+#공중유닛 및 공중공격가능유닛
 class Flyable:
     def __init__(self,flying_speed):
         self.flying_speed=flying_speed
@@ -520,12 +520,11 @@ class FlyableAttackunit(AttackUnit,Flyable):
         AttackUnit.__init__(self,name,hp,0,damage) #지상스피드는 0
         Flyable.__init__(self,flying_speed)
     def move(self, location):
-        print("[공중 유닛 이동]")
         self.fly(self.name,location)
-
+'''
 #Pass: 완성하지 않아도 완성된것처럼 만들 수 있음
 #Super: 다중 상속을 할 때는 두번 다 초기화 해야함
-
+'''
 class Marine(AttackUnit):
     def __init__(self):
         AttackUnit.__init__(self,"마린",40,1,5)
@@ -538,11 +537,278 @@ class Marine(AttackUnit):
 
 class Tank(AttackUnit):
     seize_developed =False #시즈모드 개발 여부
+    
     def __init__(self):
         AttackUnit.__init__(self,"탱크",150,1,35)
-        self.seize
-    
-    def set_seize mode(self):
+        self.seize_mode=False
+
+    def set_seizemode(self):
         if Tank.seize_developed == False:
             return
-        if Tank.seize_developed ==True:
+        if Tank.seize_developed == True:
+            print("{0} : 시즈모드로 전환합니다.".format(self.name))
+            self.damage *= 2
+            self.seize_mode = True
+        else:
+            print("{} : 싲 모드를 해제합니다".format(self.name))
+            self.damage /= 2
+            self.seize_mode = False
+
+class Wraith(FlyableAttackunit):
+    def __init__(self):
+        FlyableAttackunit.__init__(self,"레이스",80,20,5)
+        self.clocked = False
+    
+    def clocking(self):
+        if self.clocked == True:
+            print("{} : 클로킹 모드 해제합니다.".format(self.name))
+            self.clocked=False
+        else:
+            print("{} : 클로킹 모드 설정합니다.".format(self.name))
+            self.clocked=True
+
+
+def game_start():
+    print("[알림] 새로운 게임을 시작합니다")
+
+def game_over():
+    print("Player : gg") 
+    print("[player] 님이 게임에서 퇴장하셨습니다.")
+
+#실제게임시작
+game_start()
+#유닛생성
+m1=Marine()
+m2=Marine()
+m3=Marine()
+t1=Tank()
+t2=Tank()
+w1=Wraith()
+#유닛일괄관리
+attack_units=[]
+attack_units.append(m1)
+attack_units.append(m2)
+attack_units.append(m3)
+attack_units.append(t1)
+attack_units.append(t2)
+attack_units.append(w1)
+#전군이동
+for unit in attack_units:
+    unit.move("1시")
+#탱크시즈모드
+Tank.seize_developed=True
+print("[알림] 탱크 시즈모드 개발이 완료되었습니다")
+#공격모드준비
+for unit in attack_units:
+    if isinstance(unit, Marine):
+    #지금 만들어진 객체가 어느 클래스인스턴스인지 확인
+        unit.stimpack()
+    elif isinstance(unit,Tank):
+        unit.set_seizemode()
+    elif isinstance(unit, Wraith):
+        unit.clocking()
+#전군공격
+for unit in attack_units:
+    unit.attack("1시")
+#전군피해
+from random import *
+for unit in attack_units:
+    unit.damaged(randint(5,20))
+#게임종료
+game_over()
+'''
+
+#퀴즈
+# class house:
+#     def __init__(self,location,house_type,deal_type,price,completion_year):
+#         self.location=location
+#         self.house_type=house_type
+#         self.deal_type=deal_type
+#         self.price=price
+#         self.completion_year=completion_year
+#     def show_detail(self):
+#         print(self.location, self.house_type,self.deal_type,\
+#             self.price,self.completion_year)
+# house1=house("강남","아파트","매매","10억","2010년")
+# house2=house("마포","오피스텔","전세","5억","2007년")
+# house3=house("송파","빌라","월세","500/50","2000년")
+# house=[]
+# house.append(house1)
+# house.append(house2)
+# house.append(house3)
+# print("총 {0}대의 매물이 있습니다".format(len(house)))
+# for i in range(0,3):
+#     house[i].show_detail()
+
+#예외처리: try와 except 사용하기 
+'''
+try: 
+    print("나누기 전용 계산기입니다")
+    nums=[]
+    nums.append(int(input("첫번쨰 숫자를 입력하세요 : ")))
+    nums.append(int(input("두번쨰 숫자를 입력하세요 : ")))
+    nums.append(int(nums[0]/nums[1]))
+    print("{0} / {1} = {2}".format(nums[0],nums[1],nums[2]))
+except ValueError:
+    print("에러! 잘못된 값 입력")
+except ZeroDivisionError as err:
+    print(err)
+except Exception as err:
+    print("알 수 없는 에러가 발생했습니다")
+    print(err)
+'''
+
+#에러 발생시키기: 조건문과 raise Error을 사용해서 발생시키는것
+'''
+try:
+    print("한 자리 숫자 나누기 전용 계산기입니다.")
+    num1= int(input("첫 번쨰 숫자를 입력하세요 : "))
+    num2= int(input("두 번쨰 숫자를 입력하세요 : "))
+    if num1>=10 or num2>=10:
+        raise ValueError
+    print("{0} / {1} = {2}".format(num1,num2,int(num1/num2)))
+except ValueError:
+    print("잘못된 값을 입력하였습니다. 한 자리 숫자만 입력하세요")
+'''
+
+#사용자 정의 예외처리
+#finally : 어떻게든 항상 뜨게 됨 강제종료되는 것을 막음
+'''
+class BignumberError(Exception):#Exception이라는 class를 상속
+    def __init__(self,msg):
+        self.msg=msg
+    def __str__(self):
+        return self.msg
+try:
+    print("한 자리 숫자 나누기 전용 계산기입니다.")
+    num1= int(input("첫 번쨰 숫자를 입력하세요 : "))
+    num2= int(input("두 번쨰 숫자를 입력하세요 : "))
+    if num1>=10 or num2>=10:
+        raise BignumberError("입력값: {0} : {1}".format(num1,num2) )
+    print("{0} / {1} = {2}".format(num1,num2,int(num1/num2)))
+except ValueError:
+    print("잘못된 값을 입력하였습니다. 한 자리 숫자만 입력하세요")
+except BignumberError as err:
+    print("에러가 발생하였습니다. 한 자리 숫자만 입력하세요")
+finally:
+    print("계산기를 이용해 주셔서 감사합니다")
+'''
+
+#퀴즈
+# class SoldoutError(Exception):
+#     def _init(self,msg):
+#         self.msg=msg
+#     def __str__(self):
+#         return self.msg
+# chicken=10
+# waiting=1
+# while(True):
+#     try:
+#         print("남은 치킨 : {0}".format(chicken))
+#         order = int(input("치킨 몇 마리 주문하시겠습니까?"))
+#         if order> chicken:
+#             print("재료가 부족합니다.")
+#         elif order<=0:
+#             raise ValueError 
+#         else:
+#             print("대기번호 {0}. {1}마리 주문이 완료되었습니다."\
+#                 .format(waiting,order))
+#             waiting +=1
+#             chicken -=order
+#         if chicken == 0:
+#             raise SoldoutError
+#     except ValueError:
+#         print("잘못된 값을 입력하였습니다")
+#     except SoldoutError:
+#         print("재고가 소진되어 더 이상 주문을 받지 않습니다.")
+#         break
+        
+#모듈: 함수를 모아둔 것
+#호출 방법이 다양함
+'''
+import theater_module as mv #theater_module을 불러오는데 간단하게 mv로
+mv.price(3)
+mv.price_morning(4)
+mv.price_soldier(5)
+
+from theater_module import *
+price(3)
+price_morning(4)
+price_soldier(5)
+
+from theater_module import price, price_morning
+price(3)
+price_morning(4)
+
+from theater_module import price_soldier as price
+price(5)
+'''
+
+#패키지:모듈을 모아둔 집합
+'''
+import travel.thailand
+trip_to = travel.thailand.ThailandPackage()
+trip_to.detail()
+
+from travel import vietnam
+trip_to = vietnam.VietnamPackage()
+trip_to.detail()
+
+from travel import *
+trip_to = thailand.ThailandPackage()
+trip_to.detail()
+'''
+
+'''
+import inspect
+import random
+print(inspect.getfile(random))#경로를 알 수 있음 모듈이 어디서부터 왔는지
+'''
+
+#pip install
+#아래 콘솔창에 써야함
+#pip install 패키지명 
+#pip install --upgrade 패키지명
+#pip uninstall 패키지명
+#pip list
+#pip show 패키지명
+
+#내장함수
+#input : 사용자 입력을 받는 함수
+#dir : 어떤 객체를 넘겨줬을 때 그 객체가 어떤 변수와 함수를 가지고 있는지 표시
+'''
+import random
+print(dir(random))
+'''
+#외장함수
+#list of python moule 구글 검색하면 외장함수 목록들을 볼 수 있음 설명과 활용까지
+#glob : 경로 내의 폴더 / 파일 목록 조회 (윈도우 dir)
+'''
+import glob
+print(glob.glob("*.py"))
+'''
+# os : 운영체제에서 제공하는 기본 기능
+'''
+import os
+print(os.getcwd())#현재 디렉토리
+folder = "sample_dir"
+if os.path.exists(folder):
+    print("이미 존재하는 폴더입니다.")
+    os.rmdir(folder)
+    print(folder,"폴더를 삭제하였습니다. ")
+else:
+    os.makedirs(folder) # 폴더 생성
+    print(folder, "폴더를 생성하였습니다.")
+print(os.listdir())
+'''
+#time : 시간관련 함수
+import time
+print(time.localtime())
+print(time.strftime("%Y-%m-%d %H:%M:%S"))
+import datetime
+print("오늘 날짜는 ", datetime.date.today())
+#timedelta: 두 날짜 사이 간격
+today=datetime.date.today()
+love=datetime.datetime(2020,12,5)
+td=datetime.timedelta(days=100)
+print("우리가 만난지 100일은",love+td)
