@@ -1,6 +1,0 @@
-#v파일 설명
-a,b,c,d,e,text
-#column is a.b.c.d.e와 txt가 있음
-1,2,3,4,5, hi
-6,7,8,9,10, pandas
-11,12,13,14,15, csv
