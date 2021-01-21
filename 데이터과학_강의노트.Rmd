@@ -1,0 +1,121 @@
+---
+title: "Datascience lecturenote"
+author: "D H An"
+date: '2021 1 20 '
+output: html_document
+---
+Base Library
+```{r setup, include=FALSE}
+
+```
+## 데이터과학 2주차 강의노트
+  
+!(a>b) => 기존 TRUE FALSE값의 반대  
+is.na(variable) => 결측값인주 물어보고 TRUE FALSE로 나옴  
+typeof(variable) => 타입이 뭔지 알아보는거 / double=numeric  
+  
+### 벡터
+
+```{r}
+name_vector <- c('john', 'bob', 'sarah', 'alics')
+name_vector[-1]
+name_vector[c(2,4)]
+
+some_vector <- c("John", "pocker player")
+names(some_vector) <- c('name', 'job')
+some_vector
+some_vector[1]
+
+weather_vector <- c("이름"="값", 'Mon'='sunny','Tues'='Rainy','Wed'='Cloudy','Thur'='Foggy',"Sat"='sunny',"Sun"="Cloudy")
+names(weather_vector)
+weather_vector[2]
+
+a_vector <- 1:10 # seq(1,10)
+b_vector <- seq(1,10,2)
+c_vector <- rep(1:3,3)
+d_vector <- rep(1:3,each=3)
+c(a_vector,b_vector) # c(name_vector,a_vector)
+
+a_vector <- c(1,5,2,7,8,2,3)
+b_vector <- seq(1,10,3)
+intersect(a_vector,b_vector) #교집합 union합집합 setdiff차집합 unique(중복제거) sum mean
+
+#유용한 기능 
+a_vector+10
+a_vector>4
+sum(a_vector>4)
+
+#selection
+sample_vector <- c(1,4,NA,2,1,NA,4,NA)
+sample_vector[c(T,T,F,T,F,T,F,T)]
+sample_vector
+is.na(sample_vector)
+sum(is.na(sample_vector))#na 몇개인지
+na.omit(vector)# 결측값 제거
+```
+
+### matrix 행렬
+```{r}
+matrix(1:9, byrow=TRUE, nrow=3) # 열 방향으로 전개개
+
+new_hope <- c(460,314)
+empire_strikes <- c(290,247)
+return_jedi <- c(309,165)
+star_wars_matrix <- matrix(c(new_hope,empire_strikes,return_jedi),nrow = 3,byrow=TRUE)
+star_wars_matrix
+region <- c('us','non us')
+titles <- c('a new hope', 'the empire strikes back', 'return of the jedi')
+colnames(star_wars_matrix) <- region
+rownames(star_wars_matrix) <- titles
+star_wars_matrix
+
+rowSums(star_wars_matrix)#행 합
+colSums(star_wars_matrix)#열 합
+worldwide_vector <- rowSums(star_wars_matrix)
+all_wars_matrix <- cbind(star_wars_matrix,worldwide_vector) #열끼리 묶음 열이추가
+all_wars_matrix
+
+box_office <- c(474,552,310,338,380,468)
+star_wars_matrix2 <- matrix(box_office,nrow = 3, byrow = TRUE, 
+                            dimnames = list(c('the phantom menace','attack of the clones', 'revenge ofthe sith'),c('us', 'nonus')))
+star_wars_matrix2
+rbind(star_wars_matrix,star_wars_matrix2) # 행끼리 묶음 행이 추가
+#행렬 곱샘 %*% 각 성분끼리 곱은 *
+
+
+##Factor~~명목형변수로 쓰기 좋을듯
+sex_vector <- c("male","female","female","male","male") #type=character
+factor_sex_vector <- factor(sex_vector) #type=factor 
+#str() 변수의 구조를 보는 것임
+typeof(factor_sex_vector)#integer인 이유는 수준이 1,2와 같이 나타나기 때문
+str(factor_sex_vector)
+levels(factor_sex_vector)
+#Changing levels  
+survey_vector <- c("m","f","f","m","m")
+factor_survey_vector <- factor(survey_vector)
+levels(factor_survey_vector) <- c('female','male')
+
+
+##Dataframe 
+#head(df,x), tail(df,x) 앞 뒤 관측값을 보여주는것 디폴트는 6,x에 갯수 넣기
+str(mtcars)
+dim(mtcars)
+head(mtcars)
+mtcars$mpg >20
+mtcars[mtcars$mpg>20,]#df[조건,(변수이름)]으로 select할 수 있음
+
+
+##List
+my_list <- list('a'=a_vector,'starwars'=star_wars_matrix,'cars'=mtcars)
+names(my_list) <- c('a','starwars','car')
+#정보 부르는법 my_list[[1]] 1자리에 name,혹은 my_list$starwars
+
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
