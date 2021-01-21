@@ -773,6 +773,8 @@ print(inspect.getfile(random))#경로를 알 수 있음 모듈이 어디서부�
 #pip list
 #pip show 패키지명
 
+pip install plotly
+
 #내장함수
 #input : 사용자 입력을 받는 함수
 #dir : 어떤 객체를 넘겨줬을 때 그 객체가 어떤 변수와 함수를 가지고 있는지 표시
@@ -801,14 +803,14 @@ else:
     print(folder, "폴더를 생성하였습니다.")
 print(os.listdir())
 '''
-#time : 시간관련 함수
-import time
-print(time.localtime())
-print(time.strftime("%Y-%m-%d %H:%M:%S"))
-import datetime
-print("오늘 날짜는 ", datetime.date.today())
-#timedelta: 두 날짜 사이 간격
-today=datetime.date.today()
-love=datetime.datetime(2020,12,5)
-td=datetime.timedelta(days=100)
-print("우리가 만난지 100일은",love+td)
+# #time : 시간관련 함수
+# import time
+# print(time.localtime())
+# print(time.strftime("%Y-%m-%d %H:%M:%S"))
+# import datetime
+# print("오늘 날짜는 ", datetime.date.today())
+# #timedelta: 두 날짜 사이 간격
+# today=datetime.date.today()
+# love=datetime.datetime(2020,12,5)
+# td=datetime.timedelta(days=100)
+# print("우리가 만난지 100일은",love+td)
