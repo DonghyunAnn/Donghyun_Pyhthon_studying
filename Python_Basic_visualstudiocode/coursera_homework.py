@@ -61,6 +61,7 @@ lst.sort()
 lst=list(set(lst))
 print(lst)
 '''
+#Python Data Structures 5주 차
 '''
 fname = input("Enter file name: ")
 fh = open(fname)
@@ -76,7 +77,8 @@ for line in fh:
         print(line[1])
 print("There were", count, "lines in the file with From as the first word")
 '''
-
+#Python Data Structures 6주 차
+'''
 name = input("Enter file name: ")
 f = open(name)
 mail=dict()
@@ -94,4 +96,25 @@ for email,count in mail.items():
     if bigcount==None or count>bigcount:
         bigcount=count
         bigemail=email
-print("{0} {1}".format(bigcount,bigemail))
+print("{0} {1}".format(bigemail,bigcount))
+'''
+#Python Data Structures 7주 차
+'''
+name = input("Enter file:")
+fh = open(name)
+lst=[]
+hours=dict()
+for line in fh:
+    if not line.startswith('From'): continue
+    elif line.startswith('From:'): continue
+    else:
+        rawline=line.split()
+        time=rawline[5]
+        hour=time[:time.index(':')]
+        lst.append(hour)
+        lst.sort()
+for h in lst:
+    hours[h]=hours.get(h,0)+1
+for k,v in hours.items():
+    print(k,v)
+'''
