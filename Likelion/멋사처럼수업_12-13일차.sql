@@ -16,7 +16,7 @@ select id, name, CountryCode from city;
 select code, name from country limit 5; 
 
 -- 정렬 기능: order by
-select id, name, CountryCode from city order by name; 
+select id, name, CountryCode from city order by name, id; 
 
 -- 범위 선택: offset x = x부터 가져오겠다
 select id, name, CountryCode from city limit 10 offset 10; 
@@ -150,9 +150,62 @@ create table order_product(
 select datetime('now');
 
 insert into product (name, desc) values ('땅콩','....');
+insert into product (name, desc) values ('오징어땅콩','....');
 select  * from product;
 
 insert into order_product (product_id, count, created_date)
 values (1,1,date('now'));
-
 select * from order_product;
+
+-- join기능
+select * from product, order_product;
+select * from product, order_product where product.id = order_product.product_id;
+
+insert into user (name, email) values ('Park','a@a.com');
+insert into user (name, email) values ('kim','b@a.com');
+insert into user (name, email) values ('lee','c@a.com');
+select * from user;
+
+insert into order_product (product_id, user_id, count, created_date)
+values(1 ,1 ,2 ,date('now'));
+
+-- 퀴즈: 구매자가 어느날 구매했는지?
+select name, created_date from user, order_product
+where user.id = order_product.user_id;
+select * from user, order_product as op where user.id=op.user_id;
+
+--아래 두개가 같은 표현이라고 볼 수 있음
+select * from city, country where city.Countrycode = country.Code;
+select name, name, population from city, country where city.Countrycode = country.Code;
+select city.name, country.name, population from city, country where city.Countrycode = country.Code;
+
+-- 퀴즈: 언제 주문자가 어떤 제품을 몇 개 주문 했는가?
+select created_date, user.name, product.name, order_product.count
+from user, product, order_product
+where order_product.user_id = user.id and product.id = order_product.product_id;
+
+-- View 생성
+CREATE VIEW VIEW1 AS select created_date, user.name as uname, product.name as pname, order_product.count
+from user, product, order_product
+where order_product.user_id = user.id and product.id = order_product.product_id;
+--View 생성
+select created_date, uname, pname, count from view1;
+
+--관계 테이블에서 갱신과 삭제 오류
+delete from product where id=1;
+--업데이트로 바꾸는 것은 에러가 일어나지 않음
+update product set name = '뉴땅콩' where name = '땅콩';
+select * from product;
+
+--join: SQLLite 는 Right join, Full outer join을 지원하지 않음
+select * from order_product as op
+inner join product on op.product_id = product.id;
+
+/* 기타 연산 함수 */
+select date('now');
+select 1+2+4;
+select date('now'), 1+2+4;
+select time('now');
+select strftime('%m월 %d일','now');
+select min(population), max(population) from city;
+select upper(name), lower(name) from city;
